@@ -477,6 +477,9 @@ static void usage(const char *cmd)
     fprintf(stderr, "\n");
     fprintf(stderr, "  as02/as11op1a/op1a/rdd9/as10:\n");
     fprintf(stderr, "    --part <interval>       Video essence partition interval in frames, or (floating point) seconds with 's' suffix. Default single partition\n");
+    fprintf(stderr, "  rdd9:\n");
+    fprintf(stderr, "    --fixed-part <interval>   Force each partition to have the exact same partition interval in frames, except the last partition\n");
+    fprintf(stderr, "                              New partitions are started if the frame count has been reached, even if the next partition does not begin with the start of a GOP\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "  as11op1a/as11d10:\n");
     fprintf(stderr, "    --dm <fwork> <name> <value>    Set descriptive framework property. <fwork> is 'as11' or 'dpp'\n");
@@ -878,6 +881,7 @@ int main(int argc, const char** argv)
     const char *partition_interval_str = 0;
     int64_t partition_interval = 0;
     bool partition_interval_set = false;
+    bool fixed_partition_interval = false;
     const char *shim_name = 0;
     const char *shim_id = 0;
     const char *shim_annot = 0;
@@ -1296,6 +1300,10 @@ int main(int argc, const char** argv)
             }
             partition_interval_str = argv[cmdln_index + 1];
             cmdln_index++;
+        }
+        else if (strcmp(argv[cmdln_index], "--fixed-part") == 0)
+        {
+            fixed_partition_interval = true;
         }
         else if (strcmp(argv[cmdln_index], "--dm") == 0)
         {
@@ -5042,6 +5050,7 @@ int main(int argc, const char** argv)
 
             if (partition_interval_set)
                 rdd9_clip->SetPartitionInterval(partition_interval);
+            rdd9_clip->SetFixedPartitionInterval(fixed_partition_interval);
             rdd9_clip->SetOutputStartOffset(output_start_offset);
             rdd9_clip->SetOutputEndOffset(- output_end_offset);
 
