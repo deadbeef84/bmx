@@ -2673,6 +2673,10 @@ int main(int argc, const char** argv)
             dump_track_map = true;
             dump_track_map_exit = true;
         }
+        else if (strcmp(argv[cmdln_index], "--assume-mpeg2-lg") == 0)
+        {
+            assume_d10_essence_type = MPEG2LG_422P_HL_1080P;
+        }
         else if (strcmp(argv[cmdln_index], "--assume-d10-30") == 0)
         {
             assume_d10_essence_type = D10_30;
